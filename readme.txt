@@ -4,7 +4,7 @@ Tags: feedback, review, comments, visual-feedback, ai
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.10
+Stable tag: 0.1.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,13 @@ In a custom table (`wp_hxrv_comments`) in your own WordPress database. Nothing i
 
 = Who can leave comments? =
 
-Logged-in users with the `edit_pages` capability. This is filterable via `hxrv_capability`. External reviewer share links are planned for a future version.
+Logged-in users with the `edit_pages` capability (administrators and editors) by default. Change it with one line in your theme's functions.php:
+
+`add_filter( 'hxrv_capability', fn() => 'publish_posts' ); // authors and above`
+`add_filter( 'hxrv_capability', fn() => 'edit_posts' );    // contributors and above`
+`add_filter( 'hxrv_capability', fn() => 'read' );          // any logged-in user`
+
+For a review-only client account, return a custom capability (e.g. `hxrv_review`) and add it to the client's role with `add_cap()` - they get commenting rights without any editing rights. External reviewer share links (no login required) are planned for a future version.
 
 = How do I start a review? =
 
