@@ -4,7 +4,7 @@ Tags: feedback, review, comments, visual-feedback, ai
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.9
+Stable tag: 0.1.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,18 +12,27 @@ Self-hosted visual review. Pin comments to page elements, resolve them, and expo
 
 == Description ==
 
-HXRV adds a lightweight review overlay to your WordPress site. Logged-in reviewers click any element on the live page to pin a comment. Threads can be discussed and resolved Figma-style. When it is time to fix things, engineers export all open comments as a Markdown brief designed to be handed directly to AI coding agents such as Claude Code.
+Most feedback tools collect comments. HXRV turns them into a fix pipeline.
 
-**Why HXRV?**
+Reviewers click any element on the live page to pin a comment. Threads are discussed and resolved Figma-style. Then, instead of leaving a pile of tasks for a human to decipher, HXRV exports every open comment as a structured Markdown brief - selectors, element text, warnings included - ready to be handed directly to an AI coding agent such as Claude Code. The agent locates the template, the engineer reviews the diff, the reviewer checks the box.
 
-* **Element-anchored comments.** Pins are stored as a CSS selector plus a relative offset - they survive responsive layout changes, unlike coordinate-based tools.
-* **Three-stage anchor fallback.** Selector first, then a saved text excerpt re-scan, and finally an orphan tray. Comments never silently disappear after template edits.
-* **AI-ready export.** One click produces a Markdown fix brief with selectors, element text excerpts, and instructions for a coding agent. Dynamic-content comments are flagged so the agent knows the fix belongs in a loop template.
-* **Self-hosted.** All data lives in a custom table in your own database. No SaaS account, no external requests, nothing leaves your site.
-* **Lightweight by design.** Powered by htmx and Alpine.js, bundled locally. No build step, no jQuery. Assets load only in review mode for authorized users.
-* **Zero settings screens.** Configuration via filters only: `hxrv_capability`, `hxrv_export_markdown`.
+**What makes HXRV different**
 
-Part of the HX Series (HXFE - Code-First Forms, HXSE - Code-First Search).
+* **AI-ready export.** The fix brief records each comment's CSS selector, an excerpt of the element's text, dynamic-content warnings ("this pin sits inside a posts loop - fix the template, not the content"), and anchor-lost notices. An AI coding agent can grep your theme and go straight to the right file. No other feedback tool produces agent-consumable output.
+* **Element-anchored pins.** Most tools store pins as page coordinates, so they drift on responsive layouts. HXRV anchors comments to the element itself: CSS selector plus a relative offset inside it. Pins follow their element at any viewport width.
+* **Three-stage anchor fallback.** When a template edit breaks a selector, HXRV re-anchors by the element's saved text excerpt; if that fails too, the comment moves to an orphan tray instead of silently disappearing - and the export flags it so nobody (human or AI) acts on a stale pointer. Restore the element and the comment re-anchors itself.
+* **Truly self-hosted.** Everything lives in one custom table in your own database. No SaaS account, no external requests, no tracking. Install it for a review cycle, uninstall it, and every trace is gone - including the table.
+* **Lightweight by design.** Powered by htmx and Alpine.js, bundled locally (~100 KB total). No build step, no jQuery, no React widget injected into your client's site. Assets load only in review mode for authorized users.
+* **Zero settings screens.** Configuration is code: filters (`hxrv_capability`, `hxrv_export_markdown`) and CSS custom properties (`--hxrv-primary` and friends) for restyling the overlay from your theme.
+
+**The workflow**
+
+1. A reviewer (client, editor, designer) opens the page, clicks an element, leaves a comment.
+2. Threads collect replies; finished items get resolved.
+3. The engineer exports the open comments as a Markdown brief and pastes it into an AI coding agent - or reads it themselves.
+4. Fixes land, boxes get checked, the plugin can be removed without a trace.
+
+Part of the HX Series (HXFE - forms, HXSE - search): htmx-powered WordPress tools that send HTML over the wire, skip the build step, and cut every feature that is not essential.
 
 == Frequently Asked Questions ==
 
