@@ -45,9 +45,39 @@ to a coding agent (Claude Code etc.).
 ## v1 scope
 
 In: login-only review mode (`?hxrv` + `edit_pages`), pin/thread/resolve,
-admin list grouped by page, MD export (open only, AI preamble).
-Out (v2+): external reviewer share links, screenshots, email
-notifications, DOM snippet capture, integrations.
+admin list grouped by page, MD export (open + orphaned, AI preamble),
+bidirectional anchor-status sync.
+Out (v2+ roadmap, rough priority order):
+1. **External reviewer share links** — page-scoped tokens + expiry,
+   no login required. The single most requested capability for the
+   client-review use case.
+2. **Admin screen htmx-ification** — status tabs, per-page expansion,
+   inline resolve, pagination. This is where htmx earns its "series
+   axis" role: stable targets, server-driven swaps, none of the
+   overlay's positioning pitfalls. (Decided 2026-07-05: HXRV keeps
+   htmx as a series pillar; the overlay is Alpine's domain, the admin
+   is htmx's.)
+3. **Image review mode** — attachment pages already work with the
+   overlay as-is (img element + relative offsets = Figma-style pins on
+   design comps), but two gaps need closing before promoting it as a
+   feature: (a) text-excerpt re-anchoring is useless on images
+   (no textContent), so swapping the image file leaves stale pins
+   silently pointing at a new design — anchor by image URL + relative
+   coordinates instead on attachment pages; (b) the export's
+   "grep the theme" instructions don't apply — emit image filename +
+   coordinates for these pins. Until then it can be mentioned as an
+   experimental use, not a feature.
+4. Soft-delete ("trashed" status + admin restore) — decide after
+   real-project use whether accidental client deletions are an actual
+   problem (see Deletion semantics below).
+5. Screenshots, email notifications, Slack integrations — still cut.
+
+## Deletion semantics (v1, deliberate)
+
+Delete is a physical DELETE (root + replies via parent_id), guarded by
+one confirm dialog. Deactivation preserves all data; uninstall drops
+the table and options entirely ("zero traces" promise in readme).
+Resolve is the "keep the record" path; Delete is irreversible.
 
 ## File map
 
