@@ -1,0 +1,28 @@
+# HXRV - AI-Ready Visual Review
+# llms.txt - guidance for AI agents working with this plugin
+
+> HXRV is a self-hosted visual review plugin for WordPress. Reviewers pin
+> comments to page elements; open comments can be exported as a Markdown
+> fix brief designed for AI coding agents.
+
+## Documentation
+
+- docs/CLAUDE.md: architecture decisions, file map, v1 scope, testing notes.
+  Read this first before modifying the plugin.
+- readme.txt: user-facing description (WordPress.org format).
+
+## Key facts for agents
+
+- Data layer: single custom table `{prefix}hxrv_comments` (see includes/class-hxrv-db.php).
+  Queries interpolate `$wpdb->prefix` inline; values always go through $wpdb->prepare().
+- Comments are element-anchored: CSS selector + relative offset + text excerpt fallback.
+- Frontend: htmx (server sync, HTML fragments over admin-ajax) + Alpine.js (client state).
+  Both bundled in assets/js/. No build step - edit JS/CSS directly.
+- Endpoints: wp_ajax_hxrv_{list,create,reply,set_status,delete}, all nonce-guarded
+  (action 'hxrv', field 'nonce') + capability check via hxrv_capability().
+- Export: includes/class-hxrv-export.php builds the Markdown brief
+  (admin_post_hxrv_export_md, nonce 'hxrv_export').
+- Filters: hxrv_capability, hxrv_export_markdown.
+- Coding standard: WordPress Coding Standards; target Plugin Check 0 errors.
+  No heredoc syntax (Plugin Check ERROR). Table names never assigned to a
+  variable before interpolation into SQL.

@@ -1,0 +1,353 @@
+/**
+ * HXRV overlay — hxrv-overlay.css
+ *
+ * Design tokens: everything derives from --hxrv-* custom properties,
+ * so a theme can restyle the overlay by overriding variables on
+ * #hxrv-root — no settings screen, no build step.
+ *
+ * Brand primary: #0F6E56 (deep green).
+ */
+
+#hxrv-root {
+	--hxrv-primary: #0f6e56;
+	--hxrv-primary-strong: #0a5240;   /* hover / pressed */
+	--hxrv-primary-soft: #e7f2ee;     /* tint backgrounds */
+	--hxrv-ink: #17211d;              /* green-tinted near-black */
+	--hxrv-ink-muted: #5f6f68;        /* meta text */
+	--hxrv-surface: #ffffff;
+	--hxrv-border: #d8e2dd;
+	--hxrv-warn: #b45309;
+	--hxrv-danger: #b3261e;
+	--hxrv-toolbar-bg: #13251f;       /* deep green charcoal */
+	--hxrv-radius: 10px;
+	--hxrv-shadow: 0 2px 6px rgba(19, 37, 31, .10), 0 12px 32px rgba(19, 37, 31, .18);
+	--hxrv-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 0;
+	overflow: visible;
+	font: 13px/1.6 var(--hxrv-font);
+	color: var(--hxrv-ink);
+	-webkit-font-smoothing: antialiased;
+}
+
+[x-cloak] { display: none !important; }
+
+/* --- comment mode -------------------------------------------------- */
+
+html.hxrv-commenting,
+html.hxrv-commenting body * { cursor: crosshair !important; }
+
+.hxrv-hover {
+	outline: 2px solid #0f6e56 !important;
+	outline-offset: 2px;
+	box-shadow: 0 0 0 6px rgba(15, 110, 86, .14) !important;
+	border-radius: 2px;
+}
+
+/* --- toolbar -------------------------------------------------------- */
+
+.hxrv-toolbar {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	z-index: 999999;
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	background: var(--hxrv-toolbar-bg);
+	color: #fff;
+	padding: 10px 14px;
+	border-radius: 999px;
+	box-shadow: var(--hxrv-shadow);
+	font-family: var(--hxrv-font);
+}
+
+.hxrv-toolbar__exit {
+	color: rgba(255, 255, 255, .65);
+	text-decoration: none;
+	font-size: 12px;
+	transition: color .15s ease;
+}
+
+.hxrv-toolbar__exit:hover { color: #fff; }
+
+/* --- buttons --------------------------------------------------------- */
+
+.hxrv-btn {
+	appearance: none;
+	background: var(--hxrv-primary);
+	color: #fff;
+	border: 0;
+	padding: 7px 14px;
+	border-radius: 999px;
+	cursor: pointer;
+	font: 600 12.5px/1.4 var(--hxrv-font);
+	transition: background-color .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+
+.hxrv-btn:hover { background: var(--hxrv-primary-strong); }
+.hxrv-btn:active { transform: translateY(1px); }
+
+.hxrv-btn:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(15, 110, 86, .35);
+}
+
+/* toolbar mode button: quiet until armed */
+.hxrv-btn--mode {
+	background: rgba(255, 255, 255, .12);
+}
+
+.hxrv-btn--mode:hover { background: rgba(255, 255, 255, .22); }
+
+.hxrv-btn--mode.is-active {
+	background: var(--hxrv-primary);
+	box-shadow: 0 0 0 3px rgba(15, 110, 86, .35);
+}
+
+.hxrv-btn--primary { background: var(--hxrv-primary); }
+
+/* Resolve: outlined so "open pin green" and "resolve action" don't shout
+   over each other inside the card. */
+.hxrv-btn--resolve {
+	background: transparent;
+	color: var(--hxrv-primary);
+	box-shadow: inset 0 0 0 1.5px var(--hxrv-primary);
+}
+
+.hxrv-btn--resolve:hover {
+	background: var(--hxrv-primary-soft);
+	color: var(--hxrv-primary-strong);
+}
+
+.hxrv-btn--delete {
+	background: transparent;
+	color: var(--hxrv-ink-muted);
+	font-weight: 500;
+}
+
+.hxrv-btn--delete:hover {
+	background: transparent;
+	color: var(--hxrv-danger);
+}
+
+/* --- threads (pins) --------------------------------------------------- */
+
+.hxrv-thread--pinned {
+	position: absolute;
+	z-index: 999998;
+	width: 316px;
+	background: var(--hxrv-surface);
+	border-radius: calc(var(--hxrv-radius) + 2px);
+	box-shadow: var(--hxrv-shadow);
+	padding: 14px 14px 12px;
+	font-family: var(--hxrv-font);
+}
+
+/* Collapsed: marker only. */
+.hxrv-thread--pinned:not(.is-open) {
+	width: auto;
+	background: transparent;
+	box-shadow: none;
+	padding: 0;
+}
+
+.hxrv-thread--pinned:not(.is-open) > *:not(.hxrv-thread__marker) {
+	display: none;
+}
+
+.hxrv-thread__marker {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 30px;
+	height: 30px;
+	border-radius: 50% 50% 50% 0;
+	transform: rotate(-45deg) translate(-50%, -50%);
+	transform-origin: top left;
+	background: var(--hxrv-primary);
+	color: #fff;
+	border: 2px solid #fff;
+	box-shadow: 0 2px 8px rgba(19, 37, 31, .35);
+	cursor: pointer;
+	font: 700 12px/1 var(--hxrv-font);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: transform .15s ease, background-color .15s ease;
+}
+
+.hxrv-thread__marker > * { transform: rotate(45deg); }
+
+.hxrv-thread__marker:hover {
+	transform: rotate(-45deg) translate(-50%, -50%) scale(1.12);
+}
+
+.hxrv-thread.is-open .hxrv-thread__marker {
+	transform: rotate(-45deg) translate(-140%, -20%);
+}
+
+/* Resolved: hollow marker — clearly "done" without vanishing. */
+.hxrv-status-resolved .hxrv-thread__marker {
+	background: var(--hxrv-surface);
+	color: var(--hxrv-primary);
+	border-color: var(--hxrv-primary);
+	opacity: .8;
+}
+
+/* --- comments ---------------------------------------------------------- */
+
+.hxrv-comment { margin-bottom: 10px; }
+
+.hxrv-comment--reply {
+	padding-left: 12px;
+	border-left: 2px solid var(--hxrv-primary-soft);
+}
+
+.hxrv-comment__meta {
+	display: flex;
+	gap: 8px;
+	align-items: baseline;
+	color: var(--hxrv-ink-muted);
+	font-size: 11px;
+	margin-bottom: 2px;
+}
+
+.hxrv-comment__author {
+	font-weight: 700;
+	color: var(--hxrv-ink);
+}
+
+.hxrv-comment__content {
+	margin: 0;
+	word-break: break-word;
+	white-space: pre-line;
+}
+
+.hxrv-badge--dynamic { color: var(--hxrv-warn); }
+
+/* --- thread actions ----------------------------------------------------- */
+
+.hxrv-thread__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 12px;
+	padding-top: 12px;
+	border-top: 1px solid var(--hxrv-border);
+}
+
+.hxrv-reply-form {
+	flex-basis: 100%;
+	display: flex;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.hxrv-reply-form textarea,
+.hxrv-draft textarea {
+	flex: 1;
+	width: 100%;
+	border: 1.5px solid var(--hxrv-border);
+	border-radius: var(--hxrv-radius);
+	padding: 8px 10px;
+	font: 13px/1.6 var(--hxrv-font);
+	color: var(--hxrv-ink);
+	box-sizing: border-box;
+	resize: vertical;
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.hxrv-reply-form textarea:focus,
+.hxrv-draft textarea:focus {
+	outline: none;
+	border-color: var(--hxrv-primary);
+	box-shadow: 0 0 0 3px rgba(15, 110, 86, .18);
+}
+
+/* --- draft popover ------------------------------------------------------- */
+
+.hxrv-draft {
+	position: absolute;
+	z-index: 999999;
+	width: 316px;
+	background: var(--hxrv-surface);
+	border-radius: calc(var(--hxrv-radius) + 2px);
+	box-shadow: var(--hxrv-shadow);
+	padding: 14px;
+	box-sizing: border-box;
+	font-family: var(--hxrv-font);
+}
+
+.hxrv-draft__actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.hxrv-draft__warn {
+	color: var(--hxrv-warn);
+	font-size: 12px;
+	margin: 8px 0 0;
+}
+
+/* --- orphan tray ---------------------------------------------------------- */
+
+#hxrv-orphan-tray {
+	position: fixed;
+	bottom: 24px;
+	left: 24px;
+	z-index: 999999;
+	max-width: 340px;
+	max-height: 50vh;
+	overflow-y: auto;
+	border-radius: var(--hxrv-radius);
+	font-family: var(--hxrv-font);
+}
+
+.hxrv-orphan-tray__label {
+	background: var(--hxrv-warn);
+	color: #fff;
+	padding: 7px 12px;
+	border-radius: var(--hxrv-radius) var(--hxrv-radius) 0 0;
+	margin: 0;
+	font: 600 12px/1.4 var(--hxrv-font);
+}
+
+.hxrv-thread--orphaned {
+	position: static !important;
+	width: auto;
+	background: var(--hxrv-surface);
+	border: 1px solid var(--hxrv-border);
+	border-top: 0;
+	border-radius: 0;
+	box-shadow: var(--hxrv-shadow);
+	padding: 12px 14px;
+	margin: 0;
+}
+
+.hxrv-thread--orphaned .hxrv-thread__marker {
+	position: static;
+	transform: none;
+	border-radius: 50%;
+	margin-bottom: 6px;
+}
+
+.hxrv-thread--orphaned .hxrv-thread__marker > * { transform: none; }
+
+.hxrv-thread--orphaned > *:not(.hxrv-thread__marker) { display: block; }
+
+/* --- error fragments -------------------------------------------------------- */
+
+.hxrv-error {
+	background: #fdf1f0;
+	color: var(--hxrv-danger);
+	border: 1px solid #f3cfcb;
+	border-radius: var(--hxrv-radius);
+	padding: 8px 12px;
+}

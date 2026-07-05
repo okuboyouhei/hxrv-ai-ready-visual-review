@@ -1,0 +1,11 @@
+{
+  "name": "hxrv-tests",
+  "private": true,
+  "description": "DOM-level regression tests for the HXRV overlay (jsdom).",
+  "scripts": {
+    "test": "node test-reply-flow.js"
+  },
+  "devDependencies": {
+    "jsdom": "^29.0.0"
+  }
+}
