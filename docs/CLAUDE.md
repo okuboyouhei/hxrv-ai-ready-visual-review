@@ -7,6 +7,15 @@ to a coding agent (Claude Code etc.).
 
 ## Positioning
 
+- **Series hierarchy (decided 2026-07-06):** HXFE and HXSE are the
+  **core** of the WAHX stack (its building blocks; taglines speak the
+  stack's philosophy, "Code-First ○○"; banners share the blue slash).
+  HXRV is a **derivative / workflow companion** — built WITH the WAHX
+  approach but not part of the stack definition (tagline names its
+  connection point, "AI-Ready"; banner is all-green, no blue slash).
+  Never present HXRV as a WAHX stack component; present it as a tool
+  the stack's workflow uses. Future HX plugins should pick a tier
+  first — tagline grammar and banner colors follow from it.
 - **Not** code-first (the core interaction is inherently GUI).
   The shared HX DNA here: htmx-powered, no build step, no SaaS,
   data never leaves the site, aggressive feature subtraction.
