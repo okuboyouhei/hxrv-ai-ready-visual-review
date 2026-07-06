@@ -214,7 +214,77 @@
 			n++;
 			positionThread(threadEl, n);
 		});
+		renderNav();
 	}
+
+	/* ---------------------------------------------------------------
+	 * Pin navigation: numbered chips in the toolbar, one per thread,
+	 * mirroring the marker status grammar (green = open, hollow =
+	 * resolved, amber = orphaned). Click scrolls to the pin, opens
+	 * the thread, and pulses its marker. Rebuilt on every repaint so
+	 * it can never drift from the pins.
+	 * ------------------------------------------------------------- */
+
+	function renderNav() {
+		var nav = document.getElementById('hxrv-nav');
+		if (!nav) return;
+
+		nav.textContent = '';
+		var n = 0;
+		document.querySelectorAll('#hxrv-root .hxrv-thread').forEach(function (threadEl) {
+			n++;
+			var id = threadEl.getAttribute('data-hxrv-id');
+			var status = threadEl.getAttribute('data-hxrv-status') || 'open';
+			var chip = document.createElement('button');
+			chip.type = 'button';
+			chip.className = 'hxrv-nav__chip hxrv-nav__chip--' + status;
+			chip.textContent = String(n);
+			chip.setAttribute('data-hxrv-target', id || '');
+			chip.setAttribute('aria-label', 'Comment ' + n + ' (' + status + ')');
+			nav.appendChild(chip);
+		});
+	}
+
+	function jumpToThread(id) {
+		var threadEl = document.querySelector('.hxrv-thread[data-hxrv-id="' + id + '"]');
+		if (!threadEl) return;
+
+		if (threadEl.classList.contains('hxrv-thread--orphaned')) {
+			// Orphaned pins have no page position — reveal the tray instead.
+			var tray = document.getElementById('hxrv-orphan-tray');
+			if (tray && typeof tray.scrollIntoView === 'function') {
+				tray.scrollIntoView({ behavior: 'smooth', block: 'end' });
+			}
+			pulse(threadEl);
+			return;
+		}
+
+		var top = parseFloat(threadEl.style.top || '0');
+		if (typeof window.scrollTo === 'function') {
+			window.scrollTo({
+				top: Math.max(0, top - window.innerHeight / 3),
+				behavior: 'smooth'
+			});
+		}
+		threadEl.classList.add('is-open');
+		if (id) openIds[id] = true;
+		pulse(threadEl);
+	}
+
+	function pulse(threadEl) {
+		var marker = threadEl.querySelector('.hxrv-thread__marker');
+		var target = marker || threadEl;
+		target.classList.remove('hxrv-pulse');
+		// Force reflow so re-adding the class restarts the animation.
+		void target.offsetWidth;
+		target.classList.add('hxrv-pulse');
+	}
+
+	document.addEventListener('click', function (e) {
+		var chip = e.target && e.target.closest ? e.target.closest('.hxrv-nav__chip') : null;
+		if (!chip) return;
+		jumpToThread(chip.getAttribute('data-hxrv-target'));
+	});
 
 	/* ---------------------------------------------------------------
 	 * Open-state bookkeeping + deterministic list refresh

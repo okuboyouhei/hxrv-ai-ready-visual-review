@@ -107,6 +107,7 @@ class HXRV_Frontend {
 		<div id="hxrv-root" x-data="hxrvOverlay()" x-init="boot()">
 
 			<div class="hxrv-toolbar">
+				<nav id="hxrv-nav" class="hxrv-toolbar__nav" aria-label="<?php esc_attr_e( 'Jump to comment', 'hxrv-ai-ready-visual-review' ); ?>"></nav>
 				<button
 					type="button"
 					class="hxrv-btn hxrv-btn--mode"

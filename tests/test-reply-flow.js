@@ -40,7 +40,7 @@ const threadFragment = (id, content, replies) => `
 
 const dom = new JSDOM(`<!DOCTYPE html><html><body>
   <p id="target-p">ターゲット段落</p>
-  <div id="hxrv-root">
+  <div id="hxrv-root">\n    <div class="hxrv-toolbar"><nav id="hxrv-nav" class="hxrv-toolbar__nav"></nav></div>
     <div class="hxrv-toolbar"></div>
     <div id="hxrv-comments"></div>
     <div id="hxrv-orphan-tray"><p class="hxrv-orphan-tray__label" hidden></p></div>
@@ -148,6 +148,22 @@ function assert(cond, label) {
   window.dispatchEvent(new window.Event('resize'));
   await new Promise((r) => setTimeout(r, 250));
   assert(fetchLog.filter((f) => f.method === 'POST').length === 0, 'orphan: no duplicate report on repaint');
+
+  // 6) pin navigation chips
+  const nav = $('#hxrv-nav');
+  assert(!!nav, 'nav: container exists');
+  const chips = nav.querySelectorAll('.hxrv-nav__chip');
+  assert(chips.length === 2, 'nav: one chip per thread (got ' + chips.length + ')');
+  assert(chips[1].classList.contains('hxrv-nav__chip--orphaned'), 'nav: orphaned chip styled');
+
+  // clicking chip 1 opens its thread and pulses the marker
+  $('#hxrv-thread-1').classList.remove('is-open');
+  let scrolled = false;
+  window.scrollTo = function () { scrolled = true; };
+  chips[0].dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  assert($('#hxrv-thread-1').classList.contains('is-open'), 'nav: chip click opens thread');
+  assert(scrolled, 'nav: chip click scrolls the page');
+  assert(!!$('#hxrv-thread-1 .hxrv-thread__marker.hxrv-pulse'), 'nav: marker pulses after jump');
 
   console.log(failures === 0 ? '\nALL TESTS PASSED' : '\n' + failures + ' FAILURES');
   process.exit(failures === 0 ? 0 : 1);

@@ -351,3 +351,57 @@ html.hxrv-commenting body * { cursor: crosshair !important; }
 	border-radius: var(--hxrv-radius);
 	padding: 8px 12px;
 }
+
+/* --- pin navigation (toolbar chips) ---------------------------------- */
+
+.hxrv-toolbar__nav {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	max-width: 220px;
+	justify-content: flex-end;
+}
+
+.hxrv-toolbar__nav:empty { display: none; }
+
+.hxrv-nav__chip {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 1.5px solid transparent;
+	background: var(--hxrv-primary);
+	color: #fff;
+	font: 700 11px/1 var(--hxrv-font);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.hxrv-nav__chip:hover {
+	transform: scale(1.15);
+	box-shadow: 0 0 0 3px rgba(15, 110, 86, .35);
+}
+
+.hxrv-nav__chip--resolved {
+	background: transparent;
+	border-color: rgba(255, 255, 255, .55);
+	color: rgba(255, 255, 255, .75);
+}
+
+.hxrv-nav__chip--orphaned {
+	background: var(--hxrv-warn);
+}
+
+/* --- marker pulse on navigation --------------------------------------- */
+
+@keyframes hxrv-pulse-ring {
+	0%   { box-shadow: 0 0 0 0 rgba(15, 110, 86, .55); }
+	100% { box-shadow: 0 0 0 18px rgba(15, 110, 86, 0); }
+}
+
+.hxrv-pulse {
+	animation: hxrv-pulse-ring .9s ease-out 2;
+}
