@@ -22,7 +22,7 @@ class HXRV_Frontend {
 	 * Hook in.
 	 */
 	public static function init() {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ), 100 ); // Late: let the theme register its htmx/Alpine first so we can detect and reuse them.
 		add_action( 'wp_footer', array( __CLASS__, 'render_overlay_root' ) );
 		add_action( 'admin_bar_menu', array( __CLASS__, 'admin_bar_link' ), 90 );
 	}
@@ -57,17 +57,53 @@ class HXRV_Frontend {
 		);
 	}
 
+	/**
+	 * Find an already-registered copy of a library so we never load it
+	 * twice (WAHX themes ship their own htmx/Alpine).
+	 *
+	 * @param string[] $handles Script handles to look for.
+	 * @return string|null Detected handle, or null if none registered.
+	 */
+	private static function detect_handle( $handles ) {
+		foreach ( (array) $handles as $handle ) {
+			if ( wp_script_is( $handle, 'registered' ) || wp_script_is( $handle, 'enqueued' ) ) {
+				return $handle;
+			}
+		}
+		return null;
+	}
+
 	public static function enqueue() {
 		if ( ! self::is_active() ) {
 			return;
 		}
 
-		wp_enqueue_script( 'hxrv-htmx', HXRV_PLUGIN_URL . 'assets/js/htmx.min.js', array(), '2.0.10', true );
-		wp_enqueue_script( 'hxrv-overlay', HXRV_PLUGIN_URL . 'assets/js/hxrv-overlay.js', array( 'hxrv-htmx' ), HXRV_VERSION, true );
-		// Alpine boots on DOMContentLoaded; the overlay component must be
-		// registered first, so Alpine loads after it.
-		wp_enqueue_script( 'hxrv-alpine', HXRV_PLUGIN_URL . 'assets/js/alpine.min.js', array( 'hxrv-overlay' ), '3.15.12', true );
-		wp_script_add_data( 'hxrv-alpine', 'defer', true );
+		// htmx: reuse the theme's copy if present; order doesn't matter,
+		// it just needs to exist once.
+		$htmx_handle = self::detect_handle( apply_filters( 'hxrv_htmx_handles', array( 'htmx', 'htmx.org', 'htmx-js' ) ) );
+		if ( ! $htmx_handle ) {
+			$htmx_handle = 'hxrv-htmx';
+			wp_enqueue_script( $htmx_handle, HXRV_PLUGIN_URL . 'assets/js/htmx.min.js', array(), '2.0.10', true );
+		} else {
+			wp_enqueue_script( $htmx_handle );
+		}
+
+		wp_enqueue_script( 'hxrv-overlay', HXRV_PLUGIN_URL . 'assets/js/hxrv-overlay.js', array( $htmx_handle ), HXRV_VERSION, true );
+
+		// Alpine: the overlay component (window.hxrvOverlay) must exist
+		// BEFORE Alpine walks the DOM, so Alpine always loads after
+		// hxrv-overlay — for the theme's copy too, via dependency injection.
+		$alpine_handle = self::detect_handle( apply_filters( 'hxrv_alpine_handles', array( 'alpinejs', 'alpine', 'alpine-js' ) ) );
+		if ( ! $alpine_handle ) {
+			wp_enqueue_script( 'hxrv-alpine', HXRV_PLUGIN_URL . 'assets/js/alpine.min.js', array( 'hxrv-overlay' ), '3.15.12', true );
+			wp_script_add_data( 'hxrv-alpine', 'defer', true );
+		} else {
+			$scripts = wp_scripts();
+			if ( isset( $scripts->registered[ $alpine_handle ] ) && ! in_array( 'hxrv-overlay', $scripts->registered[ $alpine_handle ]->deps, true ) ) {
+				$scripts->registered[ $alpine_handle ]->deps[] = 'hxrv-overlay';
+			}
+			wp_enqueue_script( $alpine_handle );
+		}
 
 		wp_enqueue_style( 'hxrv-overlay', HXRV_PLUGIN_URL . 'assets/css/hxrv-overlay.css', array(), HXRV_VERSION );
 

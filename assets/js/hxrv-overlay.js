@@ -10,6 +10,14 @@
 (function () {
 	'use strict';
 
+	// Belt-and-braces: if this file somehow loads twice (theme bundling
+	// an unrecognized copy, aggressive optimizers), a second execution
+	// would double every delegated listener. Bail out instead.
+	if (window.__hxrvOverlayLoaded) {
+		return;
+	}
+	window.__hxrvOverlayLoaded = true;
+
 	/* ---------------------------------------------------------------
 	 * Selector generation
 	 * Priority: #id → stable classes → nth-of-type. Verified unique.

@@ -4,7 +4,7 @@ Tags: feedback, review, comments, visual-feedback, ai
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.13
+Stable tag: 0.1.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,10 @@ Logged-in users with the `edit_pages` capability (administrators and editors) by
 `add_filter( 'hxrv_capability', fn() => 'read' );          // any logged-in user`
 
 For a review-only client account, return a custom capability (e.g. `hxrv_review`) and add it to the client's role with `add_cap()` - they get commenting rights without any editing rights. External reviewer share links (no login required) are planned for a future version.
+
+= My theme already loads htmx / Alpine.js. Will they load twice? =
+
+No. HXRV detects common script handles (`htmx`, `alpinejs`, and friends) and reuses your theme's copy instead of loading its own, while guaranteeing the load order the overlay needs. If your theme registers them under custom handles, declare them via the `hxrv_htmx_handles` / `hxrv_alpine_handles` filters.
 
 = How do I start a review? =
 
