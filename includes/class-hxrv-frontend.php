@@ -62,11 +62,11 @@ class HXRV_Frontend {
 			return;
 		}
 
-		wp_enqueue_script( 'hxrv-htmx', HXRV_PLUGIN_URL . 'assets/js/htmx.min.js', array(), '2.0.4', true );
+		wp_enqueue_script( 'hxrv-htmx', HXRV_PLUGIN_URL . 'assets/js/htmx.min.js', array(), '2.0.10', true );
 		wp_enqueue_script( 'hxrv-overlay', HXRV_PLUGIN_URL . 'assets/js/hxrv-overlay.js', array( 'hxrv-htmx' ), HXRV_VERSION, true );
 		// Alpine boots on DOMContentLoaded; the overlay component must be
 		// registered first, so Alpine loads after it.
-		wp_enqueue_script( 'hxrv-alpine', HXRV_PLUGIN_URL . 'assets/js/alpine.min.js', array( 'hxrv-overlay' ), '3.14.9', true );
+		wp_enqueue_script( 'hxrv-alpine', HXRV_PLUGIN_URL . 'assets/js/alpine.min.js', array( 'hxrv-overlay' ), '3.15.12', true );
 		wp_script_add_data( 'hxrv-alpine', 'defer', true );
 
 		wp_enqueue_style( 'hxrv-overlay', HXRV_PLUGIN_URL . 'assets/css/hxrv-overlay.css', array(), HXRV_VERSION );

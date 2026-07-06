@@ -96,7 +96,7 @@ Resolve is the "keep the record" path; Delete is irreversible.
 
 ## TODO before WordPress.org submission
 
-- [x] Bundle htmx (2.0.4) and Alpine.js (3.14.9) minified files into `assets/js/`
+- [x] Bundle htmx (2.0.10) and Alpine.js (3.15.12) minified files into `assets/js/`
 - [x] readme.txt (WordPress.org format), llms.txt (root), CLAUDE.md moved to
       `docs/` (Plugin Check `unexpected_markdown_file` avoidance)
 - [x] Orphan tray UI + bidirectional anchor-status sync (hxrv_anchor endpoint)
