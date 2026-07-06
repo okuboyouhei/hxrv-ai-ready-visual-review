@@ -16,8 +16,19 @@ to a coding agent (Claude Code etc.).
   Never present HXRV as a WAHX stack component; present it as a tool
   the stack's workflow uses. Future HX plugins should pick a tier
   first — tagline grammar and banner colors follow from it.
-- **Not** code-first (the core interaction is inherently GUI).
-  The shared HX DNA here: htmx-powered, no build step, no SaaS,
+- **Code-first — on the output side (insight 2026-07-07).** The input
+  interaction is inherently GUI, but HXRV's first-class artifact is a
+  structured, selector-bearing fix brief: feedback rendered as
+  something code-adjacent tooling can consume. The series principle
+  holds across tiers with different directions: HXFE/HXSE are
+  code-first in *definition* (forms/search defined in code), HXRV is
+  code-first in *output* (feedback exported as code-ready
+  instructions). This is also the cleanest one-line answer to "why
+  does a GUI tool belong in the HX series": everything unique about
+  HXRV (element selectors over coordinates, structured MD over
+  screenshots) flows from refusing to store GUI actions in
+  human-only form.
+  The shared HX DNA otherwise: htmx-powered, no build step, no SaaS,
   data never leaves the site, aggressive feature subtraction.
 - Tagline: **AI-Ready Visual Review**. The MD export is the differentiator —
   no existing feedback plugin (BugHerd, Atarim, Noted…) outputs
