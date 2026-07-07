@@ -4,7 +4,7 @@ Tags: feedback, review, comments, visual-feedback, ai
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.14
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,13 @@ Yes. Comments anchor to the rendered DOM, so classic templates, block content, a
 
 == Changelog ==
 
+= 1.0.0 =
+* First stable release on WordPress.org.
+* Pin navigation: numbered chips in the toolbar jump to each comment and pulse its marker.
+* Reuse the theme's htmx / Alpine.js when already registered, preventing double-loading (filterable via `hxrv_htmx_handles` / `hxrv_alpine_handles`).
+* Bidirectional anchor-status sync: orphaned comments automatically return to open if the element re-appears.
+* Updated bundled libraries: Alpine.js 3.15.12, htmx 2.0.10.
+
 = 0.1.0 =
 * Initial release.
 * Element-anchored pin comments with threaded replies and resolve flow.
@@ -83,6 +90,9 @@ Yes. Comments anchor to the rendered DOM, so classic templates, block content, a
 * AI-ready Markdown export of open comments.
 
 == Upgrade Notice ==
+
+= 1.0.0 =
+First stable release.
 
 = 0.1.0 =
 Initial release.
