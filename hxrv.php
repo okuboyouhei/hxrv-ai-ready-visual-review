@@ -3,7 +3,7 @@
  * Plugin Name:       HXRV - AI-Ready Visual Review
  * Plugin URI:        https://github.com/okuboyouhei/hxrv-ai-ready-visual-review
  * Description:       Self-hosted visual review for WordPress. Click any element to leave a comment, resolve it Figma-style, and export open issues as an AI-ready Markdown brief for coding agents. Powered by htmx + Alpine.js. No SaaS, no build step, no data leaves your site.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Youhei Okubo
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HXRV_VERSION', '1.0.0' );
+define( 'HXRV_VERSION', '1.0.1' );
 define( 'HXRV_DB_VERSION', '1' );
 define( 'HXRV_PLUGIN_FILE', __FILE__ );
 define( 'HXRV_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

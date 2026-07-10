@@ -92,6 +92,16 @@ class HXRV_Ajax {
 
 		$comment          = HXRV_DB::get_comment( $id );
 		$comment->replies = array();
+
+		/**
+		 * コメント（ピン）作成完了後のフック。
+		 *
+		 * @since 1.0.1
+		 * @param int    $id      コメントID
+		 * @param object $comment コメントオブジェクト（page_url, selector, content, author_name 等）
+		 */
+		do_action( 'hxrv_after_comment_created', $id, $comment );
+
 		self::render_thread( $comment );
 		wp_die();
 	}
