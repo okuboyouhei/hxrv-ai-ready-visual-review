@@ -150,7 +150,23 @@ class HXRV_Frontend {
 					:class="{ 'is-active': commentMode }"
 					@click="toggleCommentMode()"
 				><?php esc_html_e( 'Comment', 'hxrv-ai-ready-visual-review' ); ?></button>
+				<button
+					type="button"
+					class="hxrv-btn hxrv-btn--template"
+					:class="{ 'is-active': templateOpen }"
+					@click="templateOpen = ! templateOpen"
+				><?php esc_html_e( 'Template', 'hxrv-ai-ready-visual-review' ); ?></button>
 				<a class="hxrv-toolbar__exit" href="<?php echo esc_url( $exit_url ); ?>"><?php esc_html_e( 'Exit review', 'hxrv-ai-ready-visual-review' ); ?></a>
+			</div>
+
+			<div class="hxrv-template-panel" x-show="templateOpen" x-cloak>
+				<div class="hxrv-template-panel__header">
+					<strong><?php esc_html_e( 'Template Info', 'hxrv-ai-ready-visual-review' ); ?></strong>
+					<button type="button" class="hxrv-btn hxrv-btn--copy"
+						@click="copyTemplateInfo($event)"
+					><?php esc_html_e( 'Copy as MD', 'hxrv-ai-ready-visual-review' ); ?></button>
+				</div>
+				<pre id="hxrv-template-md" class="hxrv-template-panel__body"><?php echo esc_html( HXRV_Template_Info::build_markdown() ); ?></pre>
 			</div>
 
 			<?php

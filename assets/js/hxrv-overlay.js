@@ -353,9 +353,39 @@
 	window.hxrvOverlay = function () {
 		return {
 			commentMode: false,
+			templateOpen: false,
 			draft: null,
 			draftText: '',
 			_hoverEl: null,
+
+			copyTemplateInfo: function (e) {
+				var pre = document.getElementById('hxrv-template-md');
+				var btn = e.target;
+				if (!pre) {
+					return;
+				}
+				var write = function (text) {
+					if (navigator.clipboard && window.isSecureContext) {
+						return navigator.clipboard.writeText(text);
+					}
+					// HTTP環境フォールバック
+					var ta = document.createElement('textarea');
+					ta.value = text;
+					ta.style.position = 'fixed';
+					ta.style.opacity = '0';
+					document.body.appendChild(ta);
+					ta.focus();
+					ta.select();
+					document.execCommand('copy');
+					document.body.removeChild(ta);
+					return Promise.resolve();
+				};
+				write(pre.textContent).then(function () {
+					var orig = btn.textContent;
+					btn.textContent = 'Copied!';
+					setTimeout(function () { btn.textContent = orig; }, 2000);
+				});
+			},
 
 			boot: function () {
 				var self = this;

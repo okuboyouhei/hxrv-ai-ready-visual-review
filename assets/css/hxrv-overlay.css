@@ -405,3 +405,47 @@ html.hxrv-commenting body * { cursor: crosshair !important; }
 .hxrv-pulse {
 	animation: hxrv-pulse-ring .9s ease-out 2;
 }
+
+/* ---- Template Info panel (v1.1.0) ---- */
+[x-cloak] { display: none !important; }
+
+.hxrv-template-panel {
+	position: fixed;
+	right: 16px;
+	bottom: 72px;
+	width: min(480px, calc(100vw - 32px));
+	max-height: 60vh;
+	display: flex;
+	flex-direction: column;
+	background: #1e1e1e;
+	color: #d4d4d4;
+	border-radius: 8px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+	z-index: 999999;
+	overflow: hidden;
+}
+
+.hxrv-template-panel__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 14px;
+	background: #2d2d2d;
+	font-size: 13px;
+}
+
+.hxrv-template-panel__body {
+	margin: 0;
+	padding: 14px;
+	overflow: auto;
+	font-family: 'Fira Code', 'Consolas', monospace;
+	font-size: 12px;
+	line-height: 1.7;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.hxrv-btn--copy {
+	font-size: 12px;
+	padding: 4px 10px;
+}

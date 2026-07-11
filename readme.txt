@@ -4,7 +4,7 @@ Tags: feedback, review, comments, visual-feedback, ai
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ Yes. Comments anchor to the rendered DOM, so classic templates, block content, a
 4. Exported Markdown brief ready for a coding agent.
 
 == Changelog ==
+
+= 1.1.0 =
+* Added: Template Info panel — shows the main template, get_template_part calls, and enqueued CSS/JS for the current page in review mode, with one-click "Copy as MD" for AI agents
 
 = 1.0.1 =
 * Added: `hxrv_after_comment_created` action hook — fires after a pin comment is created with `$id` and `$comment`. Enables third-party plugins (e.g. HXMD) to capture feedback
