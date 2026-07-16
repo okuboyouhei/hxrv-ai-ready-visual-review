@@ -81,6 +81,8 @@ class HXRV_Ajax {
 				'author_name'   => $user->display_name,
 				'author_id'     => $user->ID,
 				'content'       => isset( $_POST['content'] ) ? wp_unslash( $_POST['content'] ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized in HXRV_DB::insert_comment().
+				'before_text'   => isset( $_POST['before_text'] ) ? wp_unslash( $_POST['before_text'] ) : null, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized in HXRV_DB::insert_comment().
+				'after_text'    => isset( $_POST['after_text'] ) ? wp_unslash( $_POST['after_text'] ) : null, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitized in HXRV_DB::insert_comment().
 			)
 		);
 
@@ -243,6 +245,18 @@ class HXRV_Ajax {
 					<?php endif; ?>
 				</header>
 				<p class="hxrv-comment__content"><?php echo esc_html( $comment->content ); ?></p>
+				<?php if ( ! empty( $comment->before_text ) || ! empty( $comment->after_text ) ) : ?>
+					<dl class="hxrv-ba">
+						<?php if ( ! empty( $comment->before_text ) ) : ?>
+							<dt class="hxrv-ba__label hxrv-ba__label--before"><?php esc_html_e( 'Before', 'hxrv-ai-ready-visual-review' ); ?></dt>
+							<dd class="hxrv-ba__text"><?php echo esc_html( $comment->before_text ); ?></dd>
+						<?php endif; ?>
+						<?php if ( ! empty( $comment->after_text ) ) : ?>
+							<dt class="hxrv-ba__label hxrv-ba__label--after"><?php esc_html_e( 'After', 'hxrv-ai-ready-visual-review' ); ?></dt>
+							<dd class="hxrv-ba__text"><?php echo esc_html( $comment->after_text ); ?></dd>
+						<?php endif; ?>
+					</dl>
+				<?php endif; ?>
 			</div>
 
 			<?php foreach ( $comment->replies as $reply ) : ?>

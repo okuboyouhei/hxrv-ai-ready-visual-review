@@ -165,6 +165,33 @@ function assert(cond, label) {
   assert(scrolled, 'nav: chip click scrolls the page');
   assert(!!$('#hxrv-thread-1 .hxrv-thread__marker.hxrv-pulse'), 'nav: marker pulses after jump');
 
+  // 7) draft submit carries the optional Before / After fields (v1.2.0)
+  let createBody = null;
+  const origFetch = window.fetch;
+  window.fetch = function (url, opts) {
+    if (opts && opts.method === 'POST' && opts.body && typeof opts.body.get === 'function' && opts.body.get('action') === 'hxrv_create') {
+      createBody = opts.body;
+      return Promise.resolve({ ok: true, text: () => Promise.resolve('') });
+    }
+    return origFetch(url, opts);
+  };
+
+  component.draft = { selector: '#target-p', selectorText: 'ターゲット段落', offsetX: '50', offsetY: '10', isDynamic: false, pageX: 0, pageY: 0 };
+  component.draftText = '見出しを直す';
+  component.draftBefore = 'font-size 20px / 左寄せ';
+  component.draftAfter = 'font-size 32px / 中央寄せ';
+  component.draftShowBA = true;
+  component.submitDraft();
+  await tick();
+
+  assert(createBody !== null, 'draft: create POST sent');
+  assert(createBody && createBody.get('content') === '見出しを直す', 'draft: content sent');
+  assert(createBody && createBody.get('before_text') === 'font-size 20px / 左寄せ', 'draft: before_text sent');
+  assert(createBody && createBody.get('after_text') === 'font-size 32px / 中央寄せ', 'draft: after_text sent');
+  assert(component.draft === null && component.draftBefore === '' && component.draftAfter === '' && !component.draftShowBA, 'draft: before/after state reset after submit');
+
+  window.fetch = origFetch;
+
   console.log(failures === 0 ? '\nALL TESTS PASSED' : '\n' + failures + ' FAILURES');
   process.exit(failures === 0 ? 0 : 1);
 })();

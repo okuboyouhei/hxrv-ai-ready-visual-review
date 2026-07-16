@@ -46,6 +46,14 @@ to a coding agent (Claude Code etc.).
 3. **Three-stage anchor fallback:** selector → `selector_text`
    (120-char text excerpt) re-scan → `orphaned` status (never silently
    lose a comment after template edits).
+3a. **Before / After (v1.2.0):** two nullable TEXT columns
+   (`before_text`, `after_text`) on root comments only — replies force
+   them NULL. Optional and collapsed by default in the draft popover, so
+   the one-click flow is untouched. They exist for the export: an agent
+   gets an explicit "current → expected" pair. Added via `HXRV_DB_VERSION`
+   bump 1→2; `hxrv_maybe_upgrade()` re-runs dbDelta on load. When adding
+   columns, bump HXRV_DB_VERSION too — it is a FOURTH version location the
+   release checklist's "three places" does not cover.
 4. **Alpine = client state** (comment mode, hover highlight, draft
    popover). **htmx = server sync** (list/create/reply/resolve as HTML
    fragments over admin-ajax). Bridge: Alpine state → hidden inputs

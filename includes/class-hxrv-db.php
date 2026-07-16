@@ -57,6 +57,8 @@ class HXRV_DB {
 			author_name VARCHAR(100) NOT NULL DEFAULT '',
 			author_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
 			content TEXT NOT NULL,
+			before_text TEXT DEFAULT NULL,
+			after_text TEXT DEFAULT NULL,
 			status VARCHAR(20) NOT NULL DEFAULT 'open',
 			created_at DATETIME NOT NULL,
 			PRIMARY KEY  (id),
@@ -118,6 +120,8 @@ class HXRV_DB {
 			'author_name'   => '',
 			'author_id'     => 0,
 			'content'       => '',
+			'before_text'   => null,
+			'after_text'    => null,
 			'status'        => self::STATUS_OPEN,
 		);
 		$data     = wp_parse_args( $data, $defaults );
@@ -138,6 +142,10 @@ class HXRV_DB {
 			$data['offset_x']      = null;
 			$data['offset_y']      = null;
 			$data['is_dynamic']    = (int) $parent->is_dynamic;
+			// Before/After is a fix-level concept that belongs to the root
+			// comment only; replies are discussion.
+			$data['before_text']   = null;
+			$data['after_text']    = null;
 		}
 
 		$inserted = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -154,10 +162,12 @@ class HXRV_DB {
 				'author_name'   => sanitize_text_field( $data['author_name'] ),
 				'author_id'     => (int) $data['author_id'],
 				'content'       => sanitize_textarea_field( $data['content'] ),
+				'before_text'   => self::clean_optional_text( $data['before_text'] ),
+				'after_text'    => self::clean_optional_text( $data['after_text'] ),
 				'status'        => self::sanitize_status( $data['status'] ),
 				'created_at'    => current_time( 'mysql' ),
 			),
-			array( '%d', '%s', '%s', '%s', '%s', '%f', '%f', '%d', '%s', '%d', '%s', '%s', '%s' )
+			array( '%d', '%s', '%s', '%s', '%s', '%f', '%f', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s' )
 		);
 
 		return $inserted ? (int) $wpdb->insert_id : false;
@@ -293,6 +303,21 @@ class HXRV_DB {
 
 		$wpdb->delete( $wpdb->prefix . 'hxrv_comments', array( 'parent_id' => (int) $id ), array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		return (bool) $wpdb->delete( $wpdb->prefix . 'hxrv_comments', array( 'id' => (int) $id ), array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	}
+
+	/**
+	 * Sanitize an optional multi-line text field (Before / After).
+	 * Empty or whitespace-only input is stored as NULL so the display
+	 * and export layers can rely on a simple truthy check.
+	 *
+	 * @param string|null $text Raw text.
+	 * @return string|null
+	 */
+	public static function clean_optional_text( $text ) {
+		if ( is_null( $text ) || '' === trim( (string) $text ) ) {
+			return null;
+		}
+		return sanitize_textarea_field( $text );
 	}
 
 	/**

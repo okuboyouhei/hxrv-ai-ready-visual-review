@@ -296,6 +296,90 @@ html.hxrv-commenting body * { cursor: crosshair !important; }
 	margin: 8px 0 0;
 }
 
+/* --- draft: Before / After ----------------------------------------------- */
+
+.hxrv-draft__ba-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-top: 8px;
+	padding: 0;
+	background: none;
+	border: none;
+	color: var(--hxrv-ink-muted);
+	font: 12px/1.4 var(--hxrv-font);
+	cursor: pointer;
+}
+
+.hxrv-draft__ba-toggle:hover {
+	color: var(--hxrv-primary);
+}
+
+.hxrv-draft__ba-toggle span[aria-hidden] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	line-height: 13px;
+	text-align: center;
+	border: 1px solid var(--hxrv-border);
+	border-radius: 4px;
+	font-weight: 700;
+}
+
+.hxrv-draft__ba {
+	margin-top: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.hxrv-draft__ba-field {
+	display: block;
+}
+
+.hxrv-draft__ba-label {
+	display: block;
+	margin-bottom: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: .02em;
+	text-transform: uppercase;
+	color: var(--hxrv-ink-muted);
+}
+
+.hxrv-draft__ba-label--before { color: var(--hxrv-warn); }
+.hxrv-draft__ba-label--after  { color: var(--hxrv-primary); }
+
+/* --- thread card: Before / After ----------------------------------------- */
+
+.hxrv-ba {
+	margin: 8px 0 0;
+	padding: 8px 10px;
+	background: var(--hxrv-primary-soft);
+	border-radius: var(--hxrv-radius);
+	font-size: 12px;
+}
+
+.hxrv-ba__label {
+	margin: 0;
+	font-weight: 700;
+	font-size: 10px;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+.hxrv-ba__label--before { color: var(--hxrv-warn); }
+.hxrv-ba__label--after  { color: var(--hxrv-primary-strong); }
+
+.hxrv-ba dt.hxrv-ba__label--after { margin-top: 6px; }
+
+.hxrv-ba__text {
+	margin: 2px 0 0;
+	word-break: break-word;
+	white-space: pre-line;
+	color: var(--hxrv-ink);
+}
+
 /* --- orphan tray ---------------------------------------------------------- */
 
 #hxrv-orphan-tray {

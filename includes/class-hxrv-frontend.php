@@ -201,6 +201,36 @@ class HXRV_Frontend {
 					placeholder="<?php esc_attr_e( 'Leave a comment…', 'hxrv-ai-ready-visual-review' ); ?>"
 					required
 				></textarea>
+
+				<button
+					type="button"
+					class="hxrv-draft__ba-toggle"
+					:aria-expanded="draftShowBA ? 'true' : 'false'"
+					@click="draftShowBA = ! draftShowBA"
+				>
+					<span aria-hidden="true" x-text="draftShowBA ? '−' : '+'"></span>
+					<?php esc_html_e( 'Before / After', 'hxrv-ai-ready-visual-review' ); ?>
+				</button>
+
+				<div class="hxrv-draft__ba" x-show="draftShowBA" x-cloak>
+					<label class="hxrv-draft__ba-field">
+						<span class="hxrv-draft__ba-label hxrv-draft__ba-label--before"><?php esc_html_e( 'Before (current)', 'hxrv-ai-ready-visual-review' ); ?></span>
+						<textarea
+							x-model="draftBefore"
+							rows="2"
+							placeholder="<?php esc_attr_e( 'How it looks / behaves now…', 'hxrv-ai-ready-visual-review' ); ?>"
+						></textarea>
+					</label>
+					<label class="hxrv-draft__ba-field">
+						<span class="hxrv-draft__ba-label hxrv-draft__ba-label--after"><?php esc_html_e( 'After (expected)', 'hxrv-ai-ready-visual-review' ); ?></span>
+						<textarea
+							x-model="draftAfter"
+							rows="2"
+							placeholder="<?php esc_attr_e( 'How it should look / behave…', 'hxrv-ai-ready-visual-review' ); ?>"
+						></textarea>
+					</label>
+				</div>
+
 				<div class="hxrv-draft__actions">
 					<button type="submit" class="hxrv-btn hxrv-btn--primary"><?php esc_html_e( 'Comment', 'hxrv-ai-ready-visual-review' ); ?></button>
 					<button type="button" class="hxrv-btn" @click="cancelDraft()"><?php esc_html_e( 'Cancel', 'hxrv-ai-ready-visual-review' ); ?></button>

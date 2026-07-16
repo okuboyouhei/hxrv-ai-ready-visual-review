@@ -98,6 +98,12 @@ class HXRV_Export {
 					$md .= "- **Element text (excerpt)**: \"{$root->selector_text}\"\n";
 				}
 				$md .= "- **Comment**: {$root->content}\n";
+				if ( ! empty( $root->before_text ) ) {
+					$md .= '- **Before (current)**: ' . str_replace( "\n", ' ', $root->before_text ) . "\n";
+				}
+				if ( ! empty( $root->after_text ) ) {
+					$md .= '- **After (expected)**: ' . str_replace( "\n", ' ', $root->after_text ) . "\n";
+				}
 				$md .= "- **Author**: {$root->author_name} / {$root->created_at}\n";
 
 				foreach ( $thread['replies'] as $reply ) {
@@ -130,7 +136,9 @@ class HXRV_Export {
 			'   element text excerpt as the primary anchor.',
 			'3. Items marked ⚠ target possibly dynamic content (loops, latest-posts blocks);',
 			'   the fix likely belongs in the template that renders the loop, not in content.',
-			'4. Do not change unrelated markup. Keep the diff minimal.',
+			'4. When a fix has **Before (current)** and **After (expected)**, treat them as',
+			'   the target: the current state to change and the intended result.',
+			'5. Do not change unrelated markup. Keep the diff minimal.',
 		);
 
 		return implode( "\n", $lines ) . "\n";

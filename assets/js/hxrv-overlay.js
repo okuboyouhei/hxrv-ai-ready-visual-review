@@ -356,6 +356,9 @@
 			templateOpen: false,
 			draft: null,
 			draftText: '',
+			draftBefore: '',
+			draftAfter: '',
+			draftShowBA: false,
 			_hoverEl: null,
 
 			copyTemplateInfo: function (e) {
@@ -572,6 +575,9 @@
 					pageY: e.pageY
 				};
 				this.draftText = '';
+				this.draftBefore = '';
+				this.draftAfter = '';
+				this.draftShowBA = false;
 				this.clearHover();
 
 				var self = this;
@@ -603,12 +609,17 @@
 				body.append('offset_y', this.draft.offsetY);
 				body.append('is_dynamic', this.draft.isDynamic ? '1' : '0');
 				body.append('content', this.draftText);
+				body.append('before_text', this.draftBefore);
+				body.append('after_text', this.draftAfter);
 
 				fetch(HXRV.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: body })
 					.then(function (res) {
 						if (!res.ok) throw new Error('HXRV: create failed (' + res.status + ')');
 						self.draft = null;
 						self.draftText = '';
+						self.draftBefore = '';
+						self.draftAfter = '';
+						self.draftShowBA = false;
 						if (self.commentMode) self.toggleCommentMode();
 						refreshList();
 					})
@@ -620,6 +631,9 @@
 			cancelDraft: function () {
 				this.draft = null;
 				this.draftText = '';
+				this.draftBefore = '';
+				this.draftAfter = '';
+				this.draftShowBA = false;
 			}
 		};
 	};
